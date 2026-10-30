@@ -159,8 +159,9 @@ def estimate_face_quality(
         w_app = 0.35
         w_color = 0.25
     else:
-        w_face = 0.10
-        w_app = 0.50
+        # CCTV quality low / non-frontal / blurry: zero out face weight so it cannot corrupt match
+        w_face = 0.0
+        w_app = 0.60
         w_color = 0.40
 
     return QualityMetrics(

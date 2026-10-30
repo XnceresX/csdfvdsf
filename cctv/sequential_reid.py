@@ -133,8 +133,13 @@ class PersonGallery:
         best_score = 0.0
 
         for pid, pdata in self._persons.items():
-            # Body similarity
-            b_sim = cosine_similarity(body_emb, pdata["body_emb"])
+            # Body similarity against exemplar bank
+            if pdata.get("exemplars"):
+                sims = [cosine_similarity(body_emb, ex) for ex in pdata["exemplars"]]
+                sims.sort(reverse=True)
+                b_sim = float(np.mean(sims[:min(3, len(sims))]))
+            else:
+                b_sim = cosine_similarity(body_emb, pdata["body_emb"])
 
             # Face similarity (if both have face embeddings)
             f_sim = None
@@ -182,9 +187,25 @@ class PersonGallery:
         if matched:
             pid = best_id
             p = self._persons[pid]
-            # Update running average body embedding
-            p["body_emb"] = 0.85 * p["body_emb"] + 0.15 * body_emb
-            p["body_emb"] /= np.linalg.norm(p["body_emb"])
+            # Multi-exemplar gallery update with temporal spacing to eliminate drift
+            if "exemplars" not in p:
+                p["exemplars"] = [p["body_emb"].copy()]
+            last_enrolled = p.get("last_enrolled_frame", 0)
+            if frame_idx - last_enrolled >= 15:
+                if len(p["exemplars"]) < 10:
+                    p["exemplars"].append(body_emb.copy())
+                else:
+                    sims = [cosine_similarity(body_emb, ex) for ex in p["exemplars"]]
+                    p["exemplars"][int(np.argmax(sims))] = body_emb.copy()
+                p["last_enrolled_frame"] = frame_idx
+                # Recalculate centroid
+                mean_b = np.mean(p["exemplars"], axis=0)
+                norm = np.linalg.norm(mean_b)
+                if norm > 1e-8:
+                    p["body_emb"] = mean_b / norm
+            else:
+                p["body_emb"] = 0.95 * p["body_emb"] + 0.05 * body_emb
+                p["body_emb"] /= np.linalg.norm(p["body_emb"])
             # Update running average face embedding (when available)
             if face_emb is not None:
                 if p.get("face_emb") is None:

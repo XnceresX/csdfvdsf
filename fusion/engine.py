@@ -70,7 +70,8 @@ def _quality_to_weights(
     elif q_face >= 0.35:
         base_face = 0.40
     else:
-        base_face = 0.10
+        # If face quality is low or noisy in CCTV views, strictly 0.0 weight
+        base_face = 0.0
 
     if q_body >= 0.65:
         base_app = 0.65
@@ -82,8 +83,8 @@ def _quality_to_weights(
         base_app = 0.15
         base_color = 0.20
 
-    # Combined pre-normalised weights
-    w_face = base_face if face_available else 0.0
+    # Combined pre-normalised weights: face weight strictly 0.0 if unavailable or quality < 0.35
+    w_face = base_face if (face_available and q_face >= 0.35) else 0.0
     w_app = base_app if app_available else 0.0
     w_color = base_color if color_available else 0.0
 

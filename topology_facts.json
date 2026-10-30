@@ -1,0 +1,1233 @@
+{
+  "cameras": {
+    "cam1": {
+      "id": "cam1",
+      "name": "Ground Floor East Walkway",
+      "floor": 0,
+      "floor_name": "Ground Floor",
+      "fov_angle": 180.0,
+      "fov_direction": "West (along walkway towards courtyard)",
+      "map_coords": {
+        "x": 0.833,
+        "y": 0.412
+      },
+      "map_pixel_coords": {
+        "x": 1000,
+        "y": 330
+      },
+      "video_file": "data/videos/CAM 1.mp4",
+      "dvr_channel_watermark": "Channel7",
+      "fps_config": 15.0,
+      "fps_measured": 14.992,
+      "duration_sec_config": 900.0,
+      "duration_sec_measured": 839.56,
+      "total_frames": 12587,
+      "resolution": [
+        960,
+        1080
+      ],
+      "time_offset_sec_config": 0.0,
+      "watermark_start_time": "05:45:05 PM",
+      "measured_clock_offset_sec": 5.0,
+      "neighbors": [
+        "cam2",
+        "cam6"
+      ],
+      "exit_zones": [
+        {
+          "name": "To SE Corner / Gate",
+          "box": [
+            0.75,
+            0.7,
+            1.0,
+            1.0
+          ],
+          "is_terminal": false,
+          "target_camera": "cam2",
+          "terminal_name": null
+        },
+        {
+          "name": "To North Walkway",
+          "box": [
+            0.75,
+            0.0,
+            1.0,
+            0.3
+          ],
+          "is_terminal": false,
+          "target_camera": "cam6",
+          "terminal_name": null
+        }
+      ],
+      "visible_features": [
+        "Narrow outdoor ground-floor passage flanked by mossy perimeter wall on left and building wall on right",
+        "Water drain/pipe fixtures, utility water tanks and white laundry bin on ground",
+        "Deep perspective vanishing point looking north along the east passage"
+      ],
+      "exit_zone_mismatches": [
+        "Zone 'To North Walkway' [0.75, 0.0, 1.0, 0.3] is placed at top-right over solid white indoor/building wall instead of north vanishing point",
+        "Zone 'To SE Corner / Gate' [0.75, 0.7, 1.0, 1.0] is placed at bottom-right against building wall instead of rear entry path"
+      ]
+    },
+    "cam2": {
+      "id": "cam2",
+      "name": "Ground Floor SE Corner / Gate",
+      "floor": 0,
+      "floor_name": "Ground Floor",
+      "fov_angle": 225.0,
+      "fov_direction": "North-West (facing courtyard/parking)",
+      "map_coords": {
+        "x": 0.8,
+        "y": 0.837
+      },
+      "map_pixel_coords": {
+        "x": 960,
+        "y": 670
+      },
+      "video_file": "data/videos/CAM 2.mp4",
+      "dvr_channel_watermark": "Channel1",
+      "fps_config": 15.0,
+      "fps_measured": 15.0,
+      "duration_sec_config": 900.0,
+      "duration_sec_measured": 897.0,
+      "total_frames": 13455,
+      "resolution": [
+        960,
+        1080
+      ],
+      "time_offset_sec_config": 0.0,
+      "watermark_start_time": "05:45:02 PM",
+      "measured_clock_offset_sec": 2.0,
+      "neighbors": [
+        "cam1",
+        "cam3"
+      ],
+      "exit_zones": [
+        {
+          "name": "Main Gate Exit",
+          "box": [
+            0.65,
+            0.75,
+            1.0,
+            1.0
+          ],
+          "is_terminal": true,
+          "target_camera": null,
+          "terminal_name": "Main Gate Exit"
+        },
+        {
+          "name": "Room / Store",
+          "box": [
+            0.0,
+            0.7,
+            0.3,
+            1.0
+          ],
+          "is_terminal": true,
+          "target_camera": null,
+          "terminal_name": "Room/Store"
+        },
+        {
+          "name": "To East Walkway",
+          "box": [
+            0.7,
+            0.0,
+            1.0,
+            0.35
+          ],
+          "is_terminal": false,
+          "target_camera": "cam1",
+          "terminal_name": null
+        },
+        {
+          "name": "To Parking Right",
+          "box": [
+            0.0,
+            0.2,
+            0.35,
+            0.7
+          ],
+          "is_terminal": false,
+          "target_camera": "cam3",
+          "terminal_name": null
+        }
+      ],
+      "visible_features": [
+        "Interlocking brick paved driveway/courtyard extending north-west",
+        "Building exterior veranda and low parapet railing on right side",
+        "Dirt lot and parked motorcycle with green foliage on left side",
+        "Gate lattice structure in distance"
+      ],
+      "exit_zone_mismatches": [
+        "Zone 'Room / Store' [0.0, 0.7, 0.3, 1.0] is placed on bottom-left brick driveway and potted ferns; the architectural Room/Store is on the far west side of ground floor (by CAM 4)",
+        "Zone 'Main Gate Exit' [0.65, 0.75, 1.0, 1.0] covers bottom-right veranda floor near building wall rather than the actual entrance gate",
+        "Zone 'To East Walkway' [0.7, 0.0, 1.0, 0.35] covers upper-right exterior wall and window"
+      ]
+    },
+    "cam3": {
+      "id": "cam3",
+      "name": "Ground Floor Parking Right",
+      "floor": 0,
+      "floor_name": "Ground Floor",
+      "fov_angle": 210.0,
+      "fov_direction": "North-West (facing vehicle bay and entrance gate)",
+      "map_coords": {
+        "x": 0.617,
+        "y": 0.4
+      },
+      "map_pixel_coords": {
+        "x": 740,
+        "y": 320
+      },
+      "video_file": "data/videos/CAM 3.mp4",
+      "dvr_channel_watermark": "Channel3",
+      "fps_config": 15.0,
+      "fps_measured": 15.0,
+      "duration_sec_config": 900.0,
+      "duration_sec_measured": 898.0,
+      "total_frames": 13470,
+      "resolution": [
+        960,
+        1080
+      ],
+      "time_offset_sec_config": 0.0,
+      "watermark_start_time": "05:45:01 PM",
+      "measured_clock_offset_sec": 1.0,
+      "neighbors": [
+        "cam2",
+        "cam4",
+        "cam5"
+      ],
+      "exit_zones": [
+        {
+          "name": "Main Gate Exit",
+          "box": [
+            0.7,
+            0.7,
+            1.0,
+            1.0
+          ],
+          "is_terminal": true,
+          "target_camera": null,
+          "terminal_name": "Main Gate Exit"
+        },
+        {
+          "name": "Ground Stairwell",
+          "box": [
+            0.0,
+            0.25,
+            0.25,
+            0.65
+          ],
+          "is_terminal": false,
+          "target_camera": "cam5",
+          "terminal_name": null
+        },
+        {
+          "name": "To Parking Left",
+          "box": [
+            0.0,
+            0.0,
+            0.25,
+            0.3
+          ],
+          "is_terminal": false,
+          "target_camera": "cam4",
+          "terminal_name": null
+        },
+        {
+          "name": "To SE Gate",
+          "box": [
+            0.6,
+            0.6,
+            0.95,
+            0.95
+          ],
+          "is_terminal": false,
+          "target_camera": "cam2",
+          "terminal_name": null
+        }
+      ],
+      "visible_features": [
+        "Covered stilt parking lot with geometric block paving and concrete structural pillars",
+        "Black SUV (Nissan Magnite) parked in center bay",
+        "Motorcycle/scooter parked on right side",
+        "Large metal horizontal-slat gate and pedestrian wicket gate in background"
+      ],
+      "exit_zone_mismatches": [
+        "Zone 'Main Gate Exit' [0.7, 0.7, 1.0, 1.0] and 'To SE Gate' [0.6, 0.6, 0.95, 0.95] are placed at bottom-right over a parked scooter, whereas the physical main gate is clearly visible at top-center/background [0.2, 0.0, 0.8, 0.3]",
+        "Zone 'Ground Stairwell' [0.0, 0.25, 0.25, 0.65] is placed against the left solid pillar/wall rather than stairwell entry opening"
+      ]
+    },
+    "cam4": {
+      "id": "cam4",
+      "name": "Ground Floor Parking Left",
+      "floor": 0,
+      "floor_name": "Ground Floor",
+      "fov_angle": 330.0,
+      "fov_direction": "North-East (facing parking bays and stairwell opening)",
+      "map_coords": {
+        "x": 0.283,
+        "y": 0.4
+      },
+      "map_pixel_coords": {
+        "x": 340,
+        "y": 320
+      },
+      "video_file": "data/videos/CAM 4.mp4",
+      "dvr_channel_watermark": "Channel2",
+      "fps_config": 15.0,
+      "fps_measured": 15.0,
+      "duration_sec_config": 900.0,
+      "duration_sec_measured": 898.0,
+      "total_frames": 13470,
+      "resolution": [
+        960,
+        1080
+      ],
+      "time_offset_sec_config": 0.0,
+      "watermark_start_time": "05:45:01 PM",
+      "measured_clock_offset_sec": 1.0,
+      "neighbors": [
+        "cam3",
+        "cam6",
+        "cam5"
+      ],
+      "exit_zones": [
+        {
+          "name": "Ground Stairwell to 1F",
+          "box": [
+            0.75,
+            0.25,
+            1.0,
+            0.65
+          ],
+          "is_terminal": false,
+          "target_camera": "cam5",
+          "terminal_name": null
+        },
+        {
+          "name": "To North Back Walkway",
+          "box": [
+            0.2,
+            0.0,
+            0.7,
+            0.25
+          ],
+          "is_terminal": false,
+          "target_camera": "cam6",
+          "terminal_name": null
+        },
+        {
+          "name": "To Parking Right",
+          "box": [
+            0.75,
+            0.5,
+            1.0,
+            0.9
+          ],
+          "is_terminal": false,
+          "target_camera": "cam3",
+          "terminal_name": null
+        }
+      ],
+      "visible_features": [
+        "Stilt parking left bay with red motorcycle parked on left",
+        "Large gate and wall on top/background opening to driveway/outdoor lane",
+        "Central structural pillar dividing left and right bays",
+        "Scooter parked at lower right",
+        "Walkway/opening on right leading to ground floor stairwell"
+      ],
+      "exit_zone_mismatches": [
+        "Zone 'Ground Stairwell to 1F' [0.75, 0.25, 1.0, 0.65] and 'To Parking Right' [0.75, 0.5, 1.0, 0.9] overlap significantly on the right edge",
+        "No exit zone defined for 'Room / Store' despite Room/Store being adjacent to Ground Parking Left on architectural blueprints"
+      ]
+    },
+    "cam5": {
+      "id": "cam5",
+      "name": "First Floor Stairwell Landing",
+      "floor": 1,
+      "floor_name": "1st Floor Landing",
+      "fov_angle": 90.0,
+      "fov_direction": "South (facing stairs down to ground floor)",
+      "map_coords": {
+        "x": 0.5,
+        "y": 0.55
+      },
+      "map_pixel_coords": {
+        "x": 600,
+        "y": 440
+      },
+      "video_file": "data/videos/CAM 6.mp4",
+      "video_file_note": "CONFIG/FILE SWAP: Config specifies CAM 6.mp4 for cam5 because CAM 6.mp4 contains CCTV Channel 5 (1F landing footage)",
+      "dvr_channel_watermark": "Channel5",
+      "fps_config": 15.0,
+      "fps_measured": 14.98,
+      "duration_sec_config": 900.0,
+      "duration_sec_measured": 885.84,
+      "total_frames": 13270,
+      "resolution": [
+        960,
+        1080
+      ],
+      "time_offset_sec_config": 0.0,
+      "watermark_start_time": "05:45:27 PM",
+      "measured_clock_offset_sec": 27.0,
+      "neighbors": [
+        "cam3",
+        "cam4",
+        "cam7"
+      ],
+      "exit_zones": [
+        {
+          "name": "Flat 1A",
+          "box": [
+            0.0,
+            0.3,
+            0.28,
+            0.75
+          ],
+          "is_terminal": true,
+          "target_camera": null,
+          "terminal_name": "Flat 1A"
+        },
+        {
+          "name": "Flat 1B",
+          "box": [
+            0.72,
+            0.3,
+            1.0,
+            0.75
+          ],
+          "is_terminal": true,
+          "target_camera": null,
+          "terminal_name": "Flat 1B"
+        },
+        {
+          "name": "Stairs Down to Ground",
+          "box": [
+            0.35,
+            0.75,
+            0.65,
+            1.0
+          ],
+          "is_terminal": false,
+          "target_camera": "cam3",
+          "terminal_name": null
+        },
+        {
+          "name": "Stairs Up to 2F",
+          "box": [
+            0.35,
+            0.0,
+            0.65,
+            0.3
+          ],
+          "is_terminal": false,
+          "target_camera": "cam7",
+          "terminal_name": null
+        }
+      ],
+      "visible_features": [
+        "Indoor 1st floor stairwell landing with tiled floor and shoe rack/footwear on right",
+        "Stairs descending to ground floor at bottom of frame with metal handrail",
+        "Stairs ascending to 2nd floor on left side of frame",
+        "Dark green apartment door (Flat 1A) at upper-middle left",
+        "Second apartment door (Flat 1B) at top right"
+      ],
+      "exit_zone_mismatches": [
+        "Zone 'Flat 1A' [0.0, 0.3, 0.28, 0.75] is drawn on the left covering the underside of ascending stairs instead of the Flat 1A door [0.35..0.55, 0.1..0.6]",
+        "Zone 'Stairs Up to 2F' [0.35, 0.0, 0.65, 0.3] is drawn at top center over Flat 1A door frame, whereas actual ascending staircase is on the left",
+        "Zone 'Flat 1B' [0.72, 0.3, 1.0, 0.75] covers right floor and shoes rather than upper-right door frame",
+        "No exit zone configured for handoff to neighbor 'cam4'; only 'cam3' is designated for descending stairs"
+      ]
+    },
+    "cam6": {
+      "id": "cam6",
+      "name": "Ground Floor North Back Walkway",
+      "floor": 0,
+      "floor_name": "Ground Floor",
+      "fov_angle": 180.0,
+      "fov_direction": "West (facing along north back walkway)",
+      "map_coords": {
+        "x": 0.517,
+        "y": 0.2
+      },
+      "map_pixel_coords": {
+        "x": 620,
+        "y": 160
+      },
+      "video_file": "data/videos/CAM 5.mp4",
+      "video_file_note": "CONFIG/FILE SWAP: Config specifies CAM 5.mp4 for cam6 because CAM 5.mp4 contains CCTV Channel 8 (North walkway footage)",
+      "dvr_channel_watermark": "Channel8",
+      "fps_config": 15.0,
+      "fps_measured": 14.98,
+      "duration_sec_config": 900.0,
+      "duration_sec_measured": 900.64,
+      "total_frames": 13492,
+      "resolution": [
+        960,
+        1080
+      ],
+      "time_offset_sec_config": 0.0,
+      "watermark_start_time": "05:45:12 PM",
+      "measured_clock_offset_sec": 12.0,
+      "neighbors": [
+        "cam1",
+        "cam4"
+      ],
+      "exit_zones": [
+        {
+          "name": "To East Walkway",
+          "box": [
+            0.8,
+            0.0,
+            1.0,
+            0.7
+          ],
+          "is_terminal": false,
+          "target_camera": "cam1",
+          "terminal_name": null
+        },
+        {
+          "name": "To Parking Left",
+          "box": [
+            0.0,
+            0.3,
+            0.3,
+            1.0
+          ],
+          "is_terminal": false,
+          "target_camera": "cam4",
+          "terminal_name": null
+        }
+      ],
+      "visible_features": [
+        "Narrow outdoor ground walkway along north building facade with utility buckets and pipes on path",
+        "Fenced perimeter garden with overgrown vegetation on left",
+        "Building wall, windows, and electric utility meter box on right",
+        "Corridor extending into distance ahead"
+      ],
+      "exit_zone_mismatches": [
+        "Zone 'To East Walkway' [0.8, 0.0, 1.0, 0.7] is placed on right wall, windows, and electric meter box",
+        "Zone 'To Parking Left' [0.0, 0.3, 0.3, 1.0] covers left chain-link fence and vegetation rather than walkway path"
+      ]
+    },
+    "cam7": {
+      "id": "cam7",
+      "name": "Second Floor Stairwell Landing",
+      "floor": 2,
+      "floor_name": "2nd Floor Landing",
+      "fov_angle": 90.0,
+      "fov_direction": "South (facing stairs down to 1st floor)",
+      "map_coords": {
+        "x": 0.5,
+        "y": 0.55
+      },
+      "map_pixel_coords": {
+        "x": 600,
+        "y": 440
+      },
+      "video_file": "data/videos/CAM 7.mp4",
+      "dvr_channel_watermark": "Channel4",
+      "fps_config": 15.0,
+      "fps_measured": 15.0,
+      "duration_sec_config": 900.0,
+      "duration_sec_measured": 900.0,
+      "total_frames": 13500,
+      "resolution": [
+        960,
+        1080
+      ],
+      "time_offset_sec_config": 0.0,
+      "watermark_start_time": "05:45:00 PM",
+      "measured_clock_offset_sec": 0.0,
+      "neighbors": [
+        "cam5",
+        "cam8"
+      ],
+      "exit_zones": [
+        {
+          "name": "Flat 2A (Left)",
+          "box": [
+            0.0,
+            0.3,
+            0.28,
+            0.75
+          ],
+          "is_terminal": true,
+          "target_camera": null,
+          "terminal_name": "Flat 2A (Left)"
+        },
+        {
+          "name": "Flat 2B (Right)",
+          "box": [
+            0.72,
+            0.3,
+            1.0,
+            0.75
+          ],
+          "is_terminal": true,
+          "target_camera": null,
+          "terminal_name": "Flat 2B (Right)"
+        },
+        {
+          "name": "Stairs Down to 1F",
+          "box": [
+            0.35,
+            0.75,
+            0.65,
+            1.0
+          ],
+          "is_terminal": false,
+          "target_camera": "cam5",
+          "terminal_name": null
+        },
+        {
+          "name": "Stairs Up to Terrace",
+          "box": [
+            0.35,
+            0.0,
+            0.65,
+            0.3
+          ],
+          "is_terminal": false,
+          "target_camera": "cam8",
+          "terminal_name": null
+        }
+      ],
+      "visible_features": [
+        "2nd floor indoor stairwell landing layout identical to 1st floor",
+        "Stairs descending to 1st floor at bottom of frame with railing",
+        "Stairs ascending to terrace on left side",
+        "Brown door to Flat 2A on middle left with vertical window slit",
+        "Dark grey/black door to Flat 2B at top right with shoe rack and floor mat"
+      ],
+      "exit_zone_mismatches": [
+        "Zone 'Flat 2A (Left)' [0.0, 0.3, 0.28, 0.75] covers the ascending stairs to terrace instead of Flat 2A door frame",
+        "Zone 'Stairs Up to Terrace' [0.35, 0.0, 0.65, 0.3] covers top-center wall/landing rather than the ascending staircase on left",
+        "Zone 'Flat 2B (Right)' [0.72, 0.3, 1.0, 0.75] covers right floor and shoe rack rather than upper door frame"
+      ]
+    },
+    "cam8": {
+      "id": "cam8",
+      "name": "Top of Building / Terrace",
+      "floor": 3,
+      "floor_name": "Terrace",
+      "fov_angle": 180.0,
+      "fov_angle_discrepancy": "180 deg in topology.yaml and terrace.png blueprint; 270 deg in web/static/js/app.js and PROJECT_EXPLAINER.md",
+      "fov_direction": "West in config/floorplan (facing open terrace); North in app.js/docs",
+      "map_coords": {
+        "x": 0.533,
+        "y": 0.512
+      },
+      "map_pixel_coords": {
+        "x": 640,
+        "y": 410
+      },
+      "video_file": "data/videos/CAM 8.mp4",
+      "dvr_channel_watermark": "Channel6",
+      "fps_config": 15.0,
+      "fps_measured": 14.998,
+      "duration_sec_config": 900.0,
+      "duration_sec_measured": 631.88,
+      "duration_discrepancy_sec": 268.12,
+      "total_frames": 9477,
+      "resolution": [
+        960,
+        1080
+      ],
+      "time_offset_sec_config": 0.0,
+      "watermark_start_time": "05:45:03 PM",
+      "measured_clock_offset_sec": 3.0,
+      "neighbors": [
+        "cam7"
+      ],
+      "neighbors_discrepancy": "Config has ['cam7']; app.js and PROJECT_EXPLAINER.md list ['cam7', 'cam5']",
+      "exit_zones": [
+        {
+          "name": "Terrace Door",
+          "box": [
+            0.7,
+            0.35,
+            0.95,
+            0.7
+          ],
+          "is_terminal": true,
+          "target_camera": null,
+          "terminal_name": "Terrace Door"
+        },
+        {
+          "name": "Terrace Area",
+          "box": [
+            0.0,
+            0.0,
+            0.4,
+            0.6
+          ],
+          "is_terminal": true,
+          "target_camera": null,
+          "terminal_name": "Terrace Area"
+        },
+        {
+          "name": "Stairs Down to 2F",
+          "box": [
+            0.7,
+            0.65,
+            0.95,
+            1.0
+          ],
+          "is_terminal": false,
+          "target_camera": "cam7",
+          "terminal_name": null
+        }
+      ],
+      "visible_features": [
+        "Top floor headhouse corridor leading toward terrace access",
+        "Metal grill security gate and doorway in mid-ground",
+        "Brown doorway at end of corridor and water bucket",
+        "Stairwell opening from 2nd floor on right side",
+        "Large red-covered utility object in foreground"
+      ],
+      "exit_zone_mismatches": [
+        "Zone 'Terrace Area' [0.0, 0.0, 0.4, 0.6] covers interior glass sliding window and wall on upper left",
+        "Zone 'Terrace Door' [0.7, 0.35, 0.95, 0.7] is placed on right dividing wall instead of the doorway at the end of the corridor",
+        "Zone 'Stairs Down to 2F' [0.7, 0.65, 0.95, 1.0] is placed on lower right white wall"
+      ]
+    }
+  },
+  "edges": [
+    {
+      "from": "cam1",
+      "to": "cam2",
+      "t_min": 1.0,
+      "t_max": 15.0,
+      "direction": "bidirectional",
+      "how_derived": "config"
+    },
+    {
+      "from": "cam1",
+      "to": "cam6",
+      "t_min": 2.0,
+      "t_max": 20.0,
+      "direction": "bidirectional",
+      "how_derived": "config"
+    },
+    {
+      "from": "cam2",
+      "to": "cam1",
+      "t_min": 1.0,
+      "t_max": 15.0,
+      "direction": "bidirectional",
+      "how_derived": "config"
+    },
+    {
+      "from": "cam2",
+      "to": "cam3",
+      "t_min": 1.5,
+      "t_max": 18.0,
+      "direction": "bidirectional",
+      "how_derived": "config"
+    },
+    {
+      "from": "cam3",
+      "to": "cam2",
+      "t_min": 1.5,
+      "t_max": 18.0,
+      "direction": "bidirectional",
+      "how_derived": "config"
+    },
+    {
+      "from": "cam3",
+      "to": "cam4",
+      "t_min": 1.0,
+      "t_max": 12.0,
+      "direction": "bidirectional",
+      "how_derived": "config"
+    },
+    {
+      "from": "cam3",
+      "to": "cam5",
+      "t_min": 2.0,
+      "t_max": 25.0,
+      "direction": "bidirectional",
+      "how_derived": "config"
+    },
+    {
+      "from": "cam4",
+      "to": "cam3",
+      "t_min": 1.0,
+      "t_max": 12.0,
+      "direction": "bidirectional",
+      "how_derived": "config"
+    },
+    {
+      "from": "cam4",
+      "to": "cam6",
+      "t_min": 2.0,
+      "t_max": 20.0,
+      "direction": "bidirectional",
+      "how_derived": "config"
+    },
+    {
+      "from": "cam4",
+      "to": "cam5",
+      "t_min": 2.0,
+      "t_max": 25.0,
+      "direction": "bidirectional",
+      "how_derived": "config"
+    },
+    {
+      "from": "cam5",
+      "to": "cam3",
+      "t_min": 2.0,
+      "t_max": 25.0,
+      "direction": "bidirectional",
+      "how_derived": "config"
+    },
+    {
+      "from": "cam5",
+      "to": "cam4",
+      "t_min": 2.0,
+      "t_max": 25.0,
+      "direction": "bidirectional",
+      "how_derived": "config"
+    },
+    {
+      "from": "cam5",
+      "to": "cam7",
+      "t_min": 2.0,
+      "t_max": 20.0,
+      "direction": "bidirectional",
+      "how_derived": "config"
+    },
+    {
+      "from": "cam6",
+      "to": "cam1",
+      "t_min": 2.0,
+      "t_max": 20.0,
+      "direction": "bidirectional",
+      "how_derived": "config"
+    },
+    {
+      "from": "cam6",
+      "to": "cam4",
+      "t_min": 2.0,
+      "t_max": 20.0,
+      "direction": "bidirectional",
+      "how_derived": "config"
+    },
+    {
+      "from": "cam7",
+      "to": "cam5",
+      "t_min": 2.0,
+      "t_max": 20.0,
+      "direction": "bidirectional",
+      "how_derived": "config"
+    },
+    {
+      "from": "cam7",
+      "to": "cam8",
+      "t_min": 2.0,
+      "t_max": 25.0,
+      "direction": "bidirectional",
+      "how_derived": "config"
+    },
+    {
+      "from": "cam8",
+      "to": "cam7",
+      "t_min": 2.0,
+      "t_max": 25.0,
+      "direction": "bidirectional",
+      "how_derived": "config"
+    },
+    {
+      "from": "cam8",
+      "to": "cam5",
+      "t_min": null,
+      "t_max": null,
+      "direction": "unidirectional",
+      "how_derived": "guessed (present only in web/static/js/app.js and PROJECT_EXPLAINER.md; absent in configs/topology.yaml)"
+    },
+    {
+      "from": "cam5",
+      "to": "cam2",
+      "t_min": null,
+      "t_max": 280.0,
+      "direction": "unidirectional",
+      "how_derived": "guessed (present only in web/app.py DEMO_PROFILES profile_1; non-topological jump from 1F landing to Ground Gate)"
+    },
+    {
+      "from": "cam3",
+      "to": "cam6",
+      "t_min": null,
+      "t_max": 7.0,
+      "direction": "unidirectional",
+      "how_derived": "guessed (present only in web/app.py DEMO_PROFILES profile_2 and profile_3; absent in configs/topology.yaml)"
+    },
+    {
+      "from": "cam6",
+      "to": "cam7",
+      "t_min": null,
+      "t_max": 13.0,
+      "direction": "unidirectional",
+      "how_derived": "guessed (present only in web/app.py DEMO_PROFILES profile_2 and profile_3; direct jump Ground Floor to 2nd Floor, bypassing 1st Floor)"
+    }
+  ],
+  "terminals": [
+    {
+      "name": "Main Gate Exit",
+      "cameras": [
+        "cam2",
+        "cam3"
+      ],
+      "floors": [
+        0
+      ],
+      "boxes": {
+        "cam2": [
+          0.65,
+          0.75,
+          1.0,
+          1.0
+        ],
+        "cam3": [
+          0.7,
+          0.7,
+          1.0,
+          1.0
+        ]
+      },
+      "status": "configured",
+      "notes": "Configured in both cam2 and cam3. In cam3, box covers scooter at bottom-right instead of actual gate at top"
+    },
+    {
+      "name": "Room/Store",
+      "cameras": [
+        "cam2"
+      ],
+      "floors": [
+        0
+      ],
+      "boxes": {
+        "cam2": [
+          0.0,
+          0.7,
+          0.3,
+          1.0
+        ]
+      },
+      "status": "misplaced",
+      "notes": "Architectural floorplan places Room/Store on the west side near cam4, but exit zone is attached to cam2 (SE Corner)"
+    },
+    {
+      "name": "Flat 1A",
+      "cameras": [
+        "cam5"
+      ],
+      "floors": [
+        1
+      ],
+      "boxes": {
+        "cam5": [
+          0.0,
+          0.3,
+          0.28,
+          0.75
+        ]
+      },
+      "status": "configured",
+      "notes": "Door 1A on 1st Floor Landing. Box misaligned over stairs rather than doorway"
+    },
+    {
+      "name": "Flat 1B",
+      "cameras": [
+        "cam5"
+      ],
+      "floors": [
+        1
+      ],
+      "boxes": {
+        "cam5": [
+          0.72,
+          0.3,
+          1.0,
+          0.75
+        ]
+      },
+      "status": "configured",
+      "notes": "Door 1B on 1st Floor Landing"
+    },
+    {
+      "name": "Flat 2A (Left)",
+      "cameras": [
+        "cam7"
+      ],
+      "floors": [
+        2
+      ],
+      "boxes": {
+        "cam7": [
+          0.0,
+          0.3,
+          0.28,
+          0.75
+        ]
+      },
+      "status": "configured",
+      "notes": "Door 2A on 2nd Floor Landing"
+    },
+    {
+      "name": "Flat 2B (Right)",
+      "cameras": [
+        "cam7"
+      ],
+      "floors": [
+        2
+      ],
+      "boxes": {
+        "cam7": [
+          0.72,
+          0.3,
+          1.0,
+          0.75
+        ]
+      },
+      "status": "configured",
+      "notes": "Door 2B on 2nd Floor Landing"
+    },
+    {
+      "name": "Terrace Door",
+      "cameras": [
+        "cam8"
+      ],
+      "floors": [
+        3
+      ],
+      "boxes": {
+        "cam8": [
+          0.7,
+          0.35,
+          0.95,
+          0.7
+        ]
+      },
+      "status": "configured",
+      "notes": "Terrace access door inside headhouse"
+    },
+    {
+      "name": "Terrace Area",
+      "cameras": [
+        "cam8"
+      ],
+      "floors": [
+        3
+      ],
+      "boxes": {
+        "cam8": [
+          0.0,
+          0.0,
+          0.4,
+          0.6
+        ]
+      },
+      "status": "configured",
+      "notes": "Open rooftop terrace area"
+    }
+  ],
+  "floors": {
+    "0": {
+      "floor_index": 0,
+      "name": "GROUND FLOOR",
+      "floorplan_files": [
+        "data/mayfair/floorplans/ground_floor.png",
+        "web/static/maps/ground_floor.png"
+      ],
+      "resolution": [
+        1200,
+        800
+      ],
+      "cameras": [
+        "cam1",
+        "cam2",
+        "cam3",
+        "cam4",
+        "cam6"
+      ]
+    },
+    "1": {
+      "floor_index": 1,
+      "name": "1ST FLOOR LANDING",
+      "floorplan_files": [
+        "data/mayfair/floorplans/floor1.png",
+        "web/static/maps/floor1.png"
+      ],
+      "resolution": [
+        1200,
+        800
+      ],
+      "cameras": [
+        "cam5"
+      ]
+    },
+    "2": {
+      "floor_index": 2,
+      "name": "2ND FLOOR LANDING",
+      "floorplan_files": [
+        "data/mayfair/floorplans/floor2.png",
+        "web/static/maps/floor2.png"
+      ],
+      "resolution": [
+        1200,
+        800
+      ],
+      "cameras": [
+        "cam7"
+      ]
+    },
+    "3": {
+      "floor_index": 3,
+      "name": "TERRACE / ROOFTOP",
+      "floorplan_files": [
+        "data/mayfair/floorplans/terrace.png",
+        "web/static/maps/terrace.png"
+      ],
+      "resolution": [
+        1200,
+        800
+      ],
+      "cameras": [
+        "cam8"
+      ]
+    }
+  },
+  "thresholds": {
+    "acquisition_threshold": 0.65,
+    "reacquisition_fusion_threshold": 0.55,
+    "lost_timeout_sec": 1.5,
+    "neighbor_search_timeout_sec": 30.0,
+    "low_rate_check_hz": 1.0,
+    "gallery_max_size": 10,
+    "gallery_update_quality_threshold": 0.4,
+    "face_quality_threshold": 0.35,
+    "detection_confidence_threshold_config": 0.35,
+    "detection_confidence_threshold_docs": 0.4,
+    "cielab_sigma": 25.0,
+    "osnet_embedding_dim": 512,
+    "state_machine": {
+      "global_states": [
+        "UNINITIALIZED",
+        "ACQUIRING",
+        "TRACKING",
+        "TRANSITIONING",
+        "RESOLVED"
+      ],
+      "compute_states": [
+        "IDLE - 0% GPU",
+        "ACTIVE - TRACKING",
+        "SEARCHING NEIGHBOR",
+        "LOW-RATE CHECK"
+      ],
+      "transitions": [
+        {
+          "from": "UNINITIALIZED",
+          "to": "ACQUIRING",
+          "trigger": "Operator submits TargetCriteria search query via UI Wizard",
+          "action": "Activate designated starting cameras to SEARCHING NEIGHBOR, all other 6 cameras remain IDLE"
+        },
+        {
+          "from": "ACQUIRING",
+          "to": "TRACKING",
+          "trigger": "Candidate detected on starting camera with multi-modal score >= acquisition_threshold (0.65)",
+          "action": "Lock target, initialize target embedding bank, assign ACTIVE state to lock camera, set all others to IDLE"
+        },
+        {
+          "from": "TRACKING",
+          "to": "TRANSITIONING",
+          "trigger": "Target intersects an exit zone OR is lost in active camera for time_lost > lost_timeout_sec (1.5s)",
+          "action": "Record departure time, awaken topological neighbor cameras to SEARCHING NEIGHBOR, set active camera to LOW_RATE_CHECK, others IDLE"
+        },
+        {
+          "from": "TRANSITIONING",
+          "to": "TRACKING",
+          "trigger": "Candidate re-acquired in neighbor camera within physical transit window [T_min, T_max] with fusion score >= reacquisition_fusion_threshold (0.55)",
+          "action": "Handoff active camera to neighbor (ACTIVE), append to camera path, update embedding bank, return previous camera to IDLE"
+        },
+        {
+          "from": "TRANSITIONING",
+          "to": "RESOLVED",
+          "trigger": "Target enters terminal exit zone OR neighbor search timeout expires (elapsed > neighbor_search_timeout_sec = 30.0s) OR timeline reaches video end",
+          "action": "Emit FinalVerdict (inferred location, camera path, confidence), transition all cameras to IDLE (0% GPU)"
+        },
+        {
+          "from": "RESOLVED",
+          "to": "UNINITIALIZED",
+          "trigger": "Operator clicks Reset VMS button (/api/reset)",
+          "action": "Clear target bank, clear path, clear audit timeline, reset timeline to t=0.0"
+        }
+      ]
+    }
+  },
+  "issues": [
+    {
+      "category": "asymmetric_edge",
+      "description": "cam8 lists cam5 as a neighbor in web/static/js/app.js (line 28) and PROJECT_EXPLAINER.md (Table 5.1), but cam5 does not list cam8. Furthermore, cam8 -> cam5 does not exist in configs/topology.yaml and physically bypasses 2nd Floor."
+    },
+    {
+      "category": "missing_exit_zone_handoff",
+      "description": "cam5 has 'cam4' in its topological neighbors list and has transit bounds defined for cam4 [2.0, 25.0], but cam5 defines no exit zone to handoff to cam4 (only 'Stairs Down to Ground' pointing to cam3)."
+    },
+    {
+      "category": "video_path_inversion",
+      "description": "configs/topology.yaml maps cam5 (1F Landing) to 'data/videos/CAM 6.mp4' and cam6 (GF North Walkway) to 'data/videos/CAM 5.mp4'. This was done because CAM 6.mp4 contains CCTV Channel 5 and CAM 5.mp4 contains CCTV Channel 8, but it contradicts the 1-to-1 file naming convention and the fallback in src/topology_tracker.py."
+    },
+    {
+      "category": "fov_angle_contradiction",
+      "description": "cam8 FOV angle is configured as 180 deg in configs/topology.yaml and visually drawn pointing West (180 deg) on terrace.png, but is hardcoded as 270 deg (pointing North) in web/static/js/app.js (line 15) and PROJECT_EXPLAINER.md (line 235)."
+    },
+    {
+      "category": "time_offset_uncalibrated",
+      "description": "All 8 cameras have time_offset_sec set to 0.0 in configs/topology.yaml, yet CCTV watermarks on frame 0 reveal real-world clock offsets up to 27 seconds: CAM 7 (05:45:00), CAM 3 (+1s), CAM 4 (+1s), CAM 2 (+2s), CAM 8 (+3s), CAM 1 (+5s), CAM 5 (+12s), CAM 6 (+27s)."
+    },
+    {
+      "category": "video_duration_truncation",
+      "description": "Global timeline assumes 900.0s (15 min) duration, but CAM 8.mp4 is only 631.88s (10.5 min, 9477 frames). CAM 1.mp4 is 839.56s (14.0 min), CAM 6.mp4 is 885.84s (14.8 min), CAM 2.mp4 is 897.00s, CAM 3.mp4 is 898.00s, and CAM 4.mp4 is 898.00s. Seeking past 631s stalls or loops cam8."
+    },
+    {
+      "category": "misplaced_terminal_zone",
+      "description": "Terminal 'Room / Store' is configured on cam2 (SE Gate) with box [0.0, 0.7, 0.3, 1.0], which covers outdoor driveway brick paving and ferns. The architectural floorplan locates Room/Store on the far west side adjacent to cam4. cam4 has no exit zone for Room/Store."
+    },
+    {
+      "category": "exit_zone_geometric_mismatch",
+      "description": "On cam3, 'Main Gate Exit' and 'To SE Gate' are placed at [0.7, 0.7, 1.0, 1.0] and [0.6, 0.6, 0.95, 0.95] (bottom-right over a parked scooter), whereas the physical apartment gate is in the upper background [0.2, 0.0, 0.8, 0.3]."
+    },
+    {
+      "category": "exit_zone_geometric_mismatch",
+      "description": "On cam5 and cam7, residential flat door exit zones ('Flat 1A', 'Flat 2A') are placed on the left [0.0, 0.3, 0.28, 0.75] directly over ascending stairs, while 'Stairs Up' zones are placed at top center [0.35, 0.0, 0.65, 0.3] over apartment door frames."
+    },
+    {
+      "category": "exit_zone_geometric_mismatch",
+      "description": "On cam8, 'Terrace Area' [0.0, 0.0, 0.4, 0.6] and 'Terrace Door' [0.7, 0.35, 0.95, 0.7] cover interior windows and solid side walls rather than the corridor doorway."
+    },
+    {
+      "category": "exit_zone_geometric_mismatch",
+      "description": "On cam1 and cam6, walkway handoff boxes are placed on solid building corners, windows, and electric meters rather than the open perspective walkway."
+    },
+    {
+      "category": "undocumented_demo_transitions",
+      "description": "web/app.py DEMO_PROFILES defines transitions absent from configs/topology.yaml: cam5 -> cam2 (profile_1, jumping 1F to GF gate with 280s gap), cam3 -> cam6 (profile_2, profile_3), and cam6 -> cam7 (profile_2, profile_3, jumping GF north walkway to 2F landing bypassing 1F)."
+    },
+    {
+      "category": "unreachable_terminal_fallback",
+      "description": "Cameras cam1, cam4, and cam6 contain zero terminal exit zones. When target disappears on these cameras and transit timeout expires, destination resolution produces generic placeholders ('Terminal Zone in ...') rather than known architectural destinations."
+    },
+    {
+      "category": "quality_threshold_code_doc_conflict",
+      "description": "Gallery update quality gate in src/topology_tracker.py (line 770) accepts crops with target_quality >= 0.40, whereas PROJECT_EXPLAINER.md (line 189) specifies high quality Q >= 0.65 and fusion score S_fuse >= 0.75."
+    },
+    {
+      "category": "detection_threshold_conflict",
+      "description": "Detection conf_threshold in configs/default.yaml is 0.35, whereas PROJECT_EXPLAINER.md (line 87) specifies tau_conf >= 0.40."
+    }
+  ]
+}

@@ -1,0 +1,660 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>SAFEPASS — Multi-Camera Strategic Topology Tracker</title>
+  <link rel="stylesheet" href="/static/css/style.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600;700&family=Geist+Mono:wght@400;500;600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body class="dp-body">
+
+  <!-- ========================================================================= -->
+  <!-- 1. TOP NAVBAR / HEADER ("Modern Dark" Specification)                       -->
+  <!-- ========================================================================= -->
+  <header class="dp-header">
+    <div class="dp-brand-group">
+      <div class="dp-brand-badge">
+        <span class="dp-signal-dot"></span>
+        <span class="dp-brand-text">SAFEPASS // INTELLIGENT CROSS-CAMERA SURVEILLANCE &amp; RE-ID</span>
+      </div>
+      <div class="dp-header-meta">
+        <span class="dp-meta-site">Mayfair Apartment</span>
+        <span class="dp-meta-sep">/</span>
+        <span class="dp-meta-sub" id="header-layout-name">Multi-Camera Strategic Topology Tracker</span>
+      </div>
+    </div>
+
+    <!-- Center: Live Strategic Signal Pill -->
+    <div class="dp-pill-signal" id="vms-efficiency-pill">
+      <span class="dp-mint-pulse"></span>
+      <span id="efficiency-text">STRATEGIC 1-CAM ACTIVE: 87.5% GPU SAVINGS (7 CAMS IDLE)</span>
+    </div>
+
+    <!-- Right: Header Controls -->
+    <div class="dp-header-actions">
+      <button class="dp-btn-pill dp-btn-primary" id="btn-open-wizard" title="Open Target Acquisition Intake">
+        <span class="btn-glyph">＋</span> NEW SEARCH
+      </button>
+      <button class="dp-btn-pill dp-btn-secondary" id="btn-reset-vms" title="Reset Tracker to Cold Standby">
+        <span class="btn-glyph">↺</span> RESET
+      </button>
+      <button class="dp-btn-pill dp-btn-secondary" id="btn-open-sync" title="Camera Timeline Sync &amp; Remap">
+        <span class="btn-glyph">⚙</span> CALIBRATION
+      </button>
+    </div>
+  </header>
+
+  <!-- ========================================================================= -->
+  <!-- 2. MAIN 3-COLUMN WORKSPACE (Graphite Panels, Clean Spacing & Gaps)        -->
+  <!-- ========================================================================= -->
+  <div class="dp-workspace">
+
+    <!-- ── LEFT NAVIGATION: Devices & Cameras (Compact & Focused) ──────────── -->
+    <aside class="dp-left-tree">
+      <div class="dp-sidebar-header">
+        <span class="dp-sidebar-title">CAMERAS &amp; NODES</span>
+        <span class="dp-cam-count">8 ONLINE</span>
+      </div>
+
+      <div class="dp-tree-group dp-flex-grow">
+        <ul class="dp-tree-list" id="tree-camera-list">
+          {% for cam in cameras %}
+          <li class="dp-tree-item dp-cam-item {% if cam.id == 'cam1' %}active{% endif %}" id="nav-item-{{ cam.id }}" onclick="focusCamera('{{ cam.id }}', '{{ cam.name }}')">
+            <span class="dp-cam-dot dot-idle" id="tree-dot-{{ cam.id }}"></span>
+            <div class="dp-cam-info">
+              <div class="dp-cam-line1">
+                <span class="dp-cam-id">{{ cam.id | upper }}</span>
+                <span class="dp-cam-floor-tag">
+                  {% if cam.floor == 0 %}GF{% elif cam.floor == 1 %}1F{% elif cam.floor == 2 %}2F{% else %}TR{% endif %}
+                </span>
+              </div>
+              <span class="dp-cam-name" title="{{ cam.name }}">{{ cam.name }}</span>
+            </div>
+          </li>
+          {% endfor %}
+        </ul>
+      </div>
+
+      <!-- Left Tree Footer -->
+      <div class="dp-tree-footer">
+        <div class="dp-sys-line">
+          <span class="dp-lbl">VMS ENGINE:</span>
+          <span class="dp-val-mint">ONLINE</span>
+        </div>
+        <div class="dp-sys-line">
+          <span class="dp-lbl">PIPELINE:</span>
+          <span class="dp-val">OSNet+CIELAB</span>
+        </div>
+      </div>
+    </aside>
+
+    <!-- ── CENTER-LEFT COLUMN: Architectural Map & Operational Widgets ──────── -->
+    <section class="dp-center-left">
+
+      <!-- Top Half: Maps Service Blueprint with Exclusive Floor Switcher -->
+      <div class="dp-panel dp-map-panel">
+        <div class="dp-panel-header">
+          <div class="dp-header-left">
+            <span class="dp-panel-heading">MAPS SERVICE: MAYFAIR APARTMENT</span>
+            <span class="dp-badge-code" id="current-floor-badge">GROUND FLOOR</span>
+          </div>
+
+          <!-- Floor Switcher Toolbar (Exclusive Floor Navigation) -->
+          <div class="dp-tab-group">
+            <button class="dp-tab-btn active" data-floor="0" data-map="/static/maps/ground_floor.png">Ground</button>
+            <button class="dp-tab-btn" data-floor="1" data-map="/static/maps/floor1.png">1st Floor</button>
+            <button class="dp-tab-btn" data-floor="2" data-map="/static/maps/floor2.png">2nd Floor</button>
+            <button class="dp-tab-btn" data-floor="3" data-map="/static/maps/terrace.png">Terrace</button>
+          </div>
+        </div>
+
+        <!-- SVG Map Container with Embedded Blueprint -->
+        <div class="dp-map-canvas-wrap" id="map-viewport">
+          <svg class="dp-blueprint-svg" id="blueprint-svg" viewBox="0 0 1200 800" preserveAspectRatio="xMidYMid meet">
+            <!-- Architectural Background Blueprint Image -->
+            <image id="svg-floorplan-img" href="/static/maps/ground_floor.png" x="0" y="0" width="1200" height="800" preserveAspectRatio="none" />
+            
+            <!-- FOV Cones Layer (Sector Wedges) -->
+            <g id="map-fov-layer"></g>
+
+            <!-- Trajectory Path Polyline -->
+            <polyline id="trajectory-line" points="" fill="none" stroke="#3fd6c6" stroke-width="3" stroke-dasharray="6,4" opacity="0.95"/>
+
+            <!-- Dynamic Camera Nodes Layer -->
+            <g id="map-nodes-layer"></g>
+
+            <!-- Target Alert Beacon Layer -->
+            <g id="map-beacon-layer"></g>
+          </svg>
+        </div>
+      </div>
+
+      <!-- Bottom Half: Status & Log Widgets (Equal Visual Weight) -->
+      <div class="dp-widgets-row">
+
+        <!-- Target Status Widget -->
+        <div class="dp-panel dp-status-widget">
+          <div class="dp-panel-header dp-header-compact">
+            <span class="dp-panel-heading">TARGET LOCALIZATION STATUS</span>
+            <span class="dp-status-badge status-standby" id="target-state-pill">STANDBY</span>
+          </div>
+          <div class="dp-widget-body">
+            <table class="dp-table-kv">
+              <tbody>
+                <tr>
+                  <td class="dp-kv-lbl">Tracking State</td>
+                  <td class="dp-kv-val" id="tbl-target-state"><span class="dp-state-text state-idle">AWAITING TARGET</span></td>
+                </tr>
+                <tr>
+                  <td class="dp-kv-lbl">Current Location</td>
+                  <td class="dp-kv-val" id="tbl-target-loc">None (Standby)</td>
+                </tr>
+                <tr>
+                  <td class="dp-kv-lbl">Match Confidence</td>
+                  <td class="dp-kv-val dp-mono" id="tbl-target-conf">--</td>
+                </tr>
+                <tr>
+                  <td class="dp-kv-lbl">Trajectory Path</td>
+                  <td class="dp-kv-val" id="tbl-target-path"><span class="dp-path-chips">None</span></td>
+                </tr>
+                <tr>
+                  <td class="dp-kv-lbl">OSNet Feature Bank</td>
+                  <td class="dp-kv-val dp-mono" id="tbl-target-bank">N=0 embeddings</td>
+                </tr>
+                <tr>
+                  <td class="dp-kv-lbl">Final Destination</td>
+                  <td class="dp-kv-val" id="tbl-target-dest"><span class="dp-text-dim">Unresolved</span></td>
+                </tr>
+                <tr id="row-view-report" style="display: none;">
+                  <td colspan="2" style="padding-top: 8px;">
+                    <button class="dp-btn-pill dp-btn-primary dp-btn-full" id="btn-view-report" onclick="openReportModal()" style="background: linear-gradient(135deg, #10b981, #059669); font-weight: 700; box-shadow: 0 0 15px rgba(16, 185, 129, 0.35);">
+                      📄 VIEW FULL TRAJECTORY REPORT
+                    </button>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <!-- Case Trajectory Audit Log -->
+        <div class="dp-panel dp-log-widget">
+          <div class="dp-panel-header dp-header-compact">
+            <span class="dp-panel-heading">TOPOLOGY AUDIT LOG</span>
+            <span class="dp-log-meta" id="log-event-count">0 Events</span>
+          </div>
+          <div class="dp-log-body">
+            <table class="dp-log-table">
+              <thead>
+                <tr>
+                  <th>TIME</th>
+                  <th>TRANSITION</th>
+                  <th>EVENT REASON</th>
+                  <th>SCORE</th>
+                </tr>
+              </thead>
+              <tbody id="log-table-body">
+                <tr>
+                  <td class="dp-mono">00:00.0</td>
+                  <td class="dp-mono">SYSTEM</td>
+                  <td>Topology initialized. Awaiting target acquisition.</td>
+                  <td class="dp-mono">1.00</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+      </div>
+
+    </section>
+
+    <!-- ── RIGHT COLUMN: Primary & Topological Neighbor Video Monitor ───────── -->
+    <section class="dp-right-monitor">
+
+      <!-- Top: Large Primary Focused Feed -->
+      <div class="dp-panel dp-primary-feed-panel">
+        <div class="dp-feed-hud-bar">
+          <div class="dp-hud-left">
+            <span class="dp-hud-live-tag">
+              <span class="dp-mint-dot"></span> LIVE PRIMARY FEED: <span id="primary-feed-title">CAM 2 (SE GATE)</span>
+            </span>
+          </div>
+          <div class="dp-hud-right">
+            <span class="dp-tag-badge" id="primary-bank-tag">OSNet Bank: N=0</span>
+            <span class="dp-tag-badge dp-tag-mint" id="primary-compute-tag">100% GPU</span>
+          </div>
+        </div>
+
+        <div class="dp-primary-frame">
+          <img class="dp-stream-img" id="focused-img" src="/api/stream/cam2" alt="">
+        </div>
+      </div>
+
+      <!-- Bottom: Topological Neighbor Sub-Feeds & Camera Switcher Strip -->
+      <div class="dp-panel dp-subfeeds-panel">
+        <div class="dp-panel-header dp-header-compact">
+          <span class="dp-panel-heading">TOPOLOGICAL NEIGHBOR EXITS</span>
+          <span class="dp-meta-note">Predictive Standby · Click to focus</span>
+        </div>
+
+        <!-- 2 Side-by-Side Neighbor Sub-Feeds -->
+        <div class="dp-subfeeds-grid">
+          
+          <!-- Neighbor Sub-Feed 1 -->
+          <div class="dp-subfeed-box" id="subfeed-card-1" onclick="focusNeighborSubfeed(1)">
+            <div class="dp-subfeed-top">
+              <span class="dp-subfeed-dot" id="subfeed-dot-1"></span>
+              <span class="dp-subfeed-name" id="subfeed-title-1">NEIGHBOR 1: CAM 1 (EAST WALKWAY)</span>
+              <span class="dp-subfeed-badge" id="subfeed-badge-1">[0% GPU]</span>
+            </div>
+            <div class="dp-subfeed-frame">
+              <img class="dp-subfeed-img" id="subfeed-img-1" src="/api/stream/cam1" alt="">
+            </div>
+          </div>
+
+          <!-- Neighbor Sub-Feed 2 -->
+          <div class="dp-subfeed-box" id="subfeed-card-2" onclick="focusNeighborSubfeed(2)">
+            <div class="dp-subfeed-top">
+              <span class="dp-subfeed-dot" id="subfeed-dot-2"></span>
+              <span class="dp-subfeed-name" id="subfeed-title-2">NEIGHBOR 2: CAM 3 (PARKING RIGHT)</span>
+              <span class="dp-subfeed-badge" id="subfeed-badge-2">[0% GPU]</span>
+            </div>
+            <div class="dp-subfeed-frame">
+              <img class="dp-subfeed-img" id="subfeed-img-2" src="/api/stream/cam3" alt="">
+            </div>
+          </div>
+
+        </div>
+
+        <!-- Compact 1-Click Camera Switcher Strip -->
+        <div class="dp-switcher-strip">
+          <span class="dp-switcher-tag">SELECT CAM:</span>
+          <div class="dp-switcher-list">
+            {% for cam in cameras %}
+            <button class="dp-switcher-btn {% if cam.id == 'cam1' %}active{% endif %}" id="switch-btn-{{ cam.id }}" onclick="focusCamera('{{ cam.id }}', '{{ cam.name }}')" title="{{ cam.name }}">
+              <span class="dp-sw-dot" id="strip-dot-{{ cam.id }}"></span>
+              {{ cam.id | upper }}
+            </button>
+            {% endfor %}
+          </div>
+        </div>
+
+      </div>
+
+    </section>
+
+  </div>
+
+  <!-- ========================================================================= -->
+  <!-- 3. FULL-WIDTH BOTTOM DOCK: "MODERN DARK" VMS TIMELINE BAR (68px)           -->
+  <!-- ========================================================================= -->
+  <footer class="dp-timeline-dock">
+    
+    <!-- Left: Digital Timecode -->
+    <div class="dp-clock-cluster">
+      <span class="dp-clock-time" id="dock-clock-display">00:00.0</span>
+      <span class="dp-clock-max" id="dock-max-time">/ 15:00.0</span>
+    </div>
+
+    <!-- Center-Left: Transport Controls -->
+    <div class="dp-transport-cluster">
+      <button class="dp-btn-transport" id="btn-dock-sync" title="Sync to Start">⏮ SYNC</button>
+      <button class="dp-btn-transport" id="btn-dock-rewind" title="Rewind 5s">⏪ -5s</button>
+      <button class="dp-btn-transport dp-btn-transport-play" id="btn-dock-play" title="Play / Pause">▶ PLAY</button>
+      <button class="dp-btn-transport" id="btn-dock-forward" title="Forward 5s">+5s ⏩</button>
+      <button class="dp-btn-transport dp-btn-transport-next" id="btn-dock-next-sighting" title="Advance to Next Camera Sighting (or press 'N')" style="background: rgba(63, 214, 198, 0.12); border-color: var(--dp-color-live); color: var(--dp-color-live); font-weight: 600;">⏭ NEXT SIGHTING</button>
+      
+      <!-- Speed Selector -->
+      <div class="dp-speed-cluster">
+        <button class="dp-btn-speed active" data-speed="1.0">1x</button>
+        <button class="dp-btn-speed" data-speed="2.0">2x</button>
+        <button class="dp-btn-speed" data-speed="4.0">4x</button>
+      </div>
+    </div>
+
+    <!-- Center-Right: Horizontal Ruler Timeline & Scrub Track -->
+    <div class="dp-ruler-cluster">
+      <!-- Time Ruler Markings -->
+      <div class="dp-ruler-ticks">
+        <span class="dp-tick-txt">00:00</span>
+        <span class="dp-tick-txt">02:00</span>
+        <span class="dp-tick-txt">04:00</span>
+        <span class="dp-tick-txt">06:00</span>
+        <span class="dp-tick-txt">08:00</span>
+        <span class="dp-tick-txt">10:00</span>
+        <span class="dp-tick-txt">12:00</span>
+        <span class="dp-tick-txt">14:00</span>
+        <span class="dp-tick-txt">15:00</span>
+      </div>
+
+      <!-- Range Slider with Detection Event Markers -->
+      <div class="dp-slider-track-wrap">
+        <div class="dp-event-markers" id="timeline-event-markers">
+          <!-- Dynamic mint detection tick markers inserted by JS -->
+        </div>
+        <input type="range" class="dp-scrub-input" id="vms-scrubber" min="0" max="{{ duration_sec }}" step="0.5" value="0">
+      </div>
+    </div>
+
+  </footer>
+
+  <!-- ========================================================================= -->
+  <!-- 4. MODAL 1: TARGET ACQUISITION INTAKE WIZARD (HIDES ON SUBMISSION)        -->
+  <!-- ========================================================================= -->
+  <div class="dp-modal-backdrop" id="wizard-modal" style="display: flex;">
+    <div class="dp-modal-card">
+      
+      <!-- Wizard Header -->
+      <div class="dp-modal-header">
+        <div>
+          <div class="dp-modal-eyebrow">STEP-BY-STEP TARGET ACQUISITION</div>
+          <h2 class="dp-modal-title">Deploy Strategic Person Tracking</h2>
+          <p class="dp-modal-desc">Specify where the individual was last seen and their dressing profile. This intake wizard will automatically hide once tracking begins.</p>
+        </div>
+        <button class="dp-modal-close" id="btn-close-wizard" title="Close Wizard">✕</button>
+      </div>
+
+      <!-- Wizard Form Body -->
+      <div class="dp-modal-body">
+        
+        <!-- STEP 1: Camera Last Seen -->
+        <div class="dp-form-step">
+          <div class="dp-step-heading">
+            <span class="dp-step-badge">1</span>
+            <span class="dp-step-label">Where was the person last seen?</span>
+          </div>
+          <div class="dp-field-box">
+            <select class="dp-select" id="wizard-start-cam">
+              <option value="cam1">CAM 1 — Ground Floor (East Walkway)</option>
+              <option value="cam2" selected>CAM 2 — Ground Floor (SE Corner / Gate) [Recommended Default]</option>
+              <option value="cam3">CAM 3 — Ground Floor (Parking Right)</option>
+              <option value="cam4">CAM 4 — Ground Floor (Parking Left)</option>
+              <option value="cam5">CAM 5 — 1st Floor (Stairwell Landing)</option>
+              <option value="cam6">CAM 6 — Ground Floor (North Back Walkway)</option>
+              <option value="cam7">CAM 7 — 2nd Floor (Stairwell Landing)</option>
+              <option value="cam8">CAM 8 — Terrace / Rooftop</option>
+            </select>
+          </div>
+        </div>
+
+        <!-- STEP 2: Dressing & Bag Profile (with visual color swatches) -->
+        <div class="dp-form-step">
+          <div class="dp-step-heading">
+            <span class="dp-step-badge">2</span>
+            <span class="dp-step-label">Target Dressing &amp; Accessory Profile</span>
+          </div>
+
+          <div class="dp-form-grid-2col">
+
+            <!-- Upper Clothing Color with Visual Dot -->
+            <div class="dp-field-box">
+              <label class="dp-field-label">
+                <span class="dp-color-swatch-dot" id="dot-preview-upper" style="background:#111;"></span>
+                Upper Clothing Color
+              </label>
+              <select class="dp-select" id="wizard-upper-color" onchange="updateColorPreview('upper', this.value)">
+                <option value="any">Any Color (Wildcard)</option>
+                <option value="black" selected>Black ●</option>
+                <option value="white">White ○</option>
+                <option value="gray">Gray ●</option>
+                <option value="red">Red ●</option>
+                <option value="orange">Orange ●</option>
+                <option value="yellow">Yellow ●</option>
+                <option value="green">Green ●</option>
+                <option value="blue">Blue ●</option>
+                <option value="purple">Purple ●</option>
+                <option value="brown">Brown ●</option>
+                <option value="pink">Pink ●</option>
+                <option value="beige">Beige ●</option>
+              </select>
+            </div>
+
+            <!-- Lower Clothing Color with Visual Dot -->
+            <div class="dp-field-box">
+              <label class="dp-field-label">
+                <span class="dp-color-swatch-dot" id="dot-preview-lower" style="background:#2563eb;"></span>
+                Lower Clothing Color
+              </label>
+              <select class="dp-select" id="wizard-lower-color" onchange="updateColorPreview('lower', this.value)">
+                <option value="any">Any Color (Wildcard)</option>
+                <option value="blue" selected>Blue ●</option>
+                <option value="black">Black ●</option>
+                <option value="gray">Gray ●</option>
+                <option value="white">White ○</option>
+                <option value="brown">Brown ●</option>
+                <option value="red">Red ●</option>
+                <option value="green">Green ●</option>
+                <option value="beige">Beige ●</option>
+              </select>
+            </div>
+
+            <!-- Lower Garment Type -->
+            <div class="dp-field-box">
+              <label class="dp-field-label">Lower Garment Type</label>
+              <select class="dp-select" id="wizard-garment-type">
+                <option value="Any">Any Garment Type</option>
+                <option value="Yes" selected>Long Pants / Trousers</option>
+                <option value="No">Shorts / Skirt</option>
+              </select>
+            </div>
+
+            <!-- Outerwear -->
+            <div class="dp-field-box">
+              <label class="dp-field-label">Outerwear</label>
+              <select class="dp-select" id="wizard-outerwear">
+                <option value="Any" selected>Any Outerwear</option>
+                <option value="Yes">Wearing Coat / Jacket</option>
+                <option value="No">No Jacket (Shirt / T-shirt only)</option>
+              </select>
+            </div>
+
+            <!-- Bag / Backpack -->
+            <div class="dp-field-box">
+              <label class="dp-field-label">Bag / Backpack</label>
+              <select class="dp-select" id="wizard-bag">
+                <option value="Any" selected>Any Bag Configuration</option>
+                <option value="Backpack">Backpack</option>
+                <option value="Handbag">Handbag / Shoulder Bag</option>
+                <option value="NoBag">No Bag Detected</option>
+              </select>
+            </div>
+
+            <!-- Headwear / Hat -->
+            <div class="dp-field-box">
+              <label class="dp-field-label">Headwear / Hat</label>
+              <select class="dp-select" id="wizard-hat">
+                <option value="Any" selected>Any Headwear</option>
+                <option value="Yes">Wearing Hat / Cap</option>
+                <option value="No">No Hat</option>
+              </select>
+            </div>
+
+          </div>
+        </div>
+
+      </div>
+
+      <!-- Wizard Action Footer -->
+      <div class="dp-modal-footer">
+        <div class="dp-footer-note">
+          Clicking start will lock the camera, start timeline playback, and close this window.
+        </div>
+        <button class="dp-btn-pill dp-btn-primary dp-btn-full" id="btn-start-tracking-wizard">
+          🎯 START TRACKING TARGET
+        </button>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ========================================================================= -->
+  <!-- 5. MODAL 2: CAMERA TIMELINE SYNC & VIDEO REMAPPING                        -->
+  <!-- ========================================================================= -->
+  <div class="dp-modal-backdrop" id="sync-modal" style="display: none;">
+    <div class="dp-modal-card" style="max-width: 660px;">
+      <div class="dp-modal-header">
+        <div>
+          <div class="dp-modal-eyebrow">SYSTEM CALIBRATION</div>
+          <h2 class="dp-modal-title">Camera Timeline Alignment &amp; Stream Remapping</h2>
+          <p class="dp-modal-desc">Adjust per-camera time offsets (+/- seconds) to align footage across out-of-order streams on a unified global timeline, or remap video files live.</p>
+        </div>
+        <button class="dp-modal-close" id="btn-close-sync">✕</button>
+      </div>
+
+      <div class="dp-modal-body" style="max-height: 55vh; overflow-y: auto;">
+        {% for cam in cameras %}
+        <div class="dp-sync-card">
+          <div class="dp-sync-header">
+            <span class="dp-sync-name">{{ cam.id | upper }}: {{ cam.name }}</span>
+            <span class="dp-sync-val dp-mono" id="val-offset-{{ cam.id }}">{{ cam.time_offset_sec }}s</span>
+          </div>
+
+          <div class="dp-sync-controls">
+            <span class="dp-sync-label">Offset (sec):</span>
+            <input type="range" class="dp-sync-slider" id="slider-offset-{{ cam.id }}" min="-60" max="60" step="0.5" value="{{ cam.time_offset_sec }}" oninput="onOffsetSliderChange('{{ cam.id }}', this.value)">
+            <input type="number" class="dp-sync-num dp-mono" id="input-offset-{{ cam.id }}" value="{{ cam.time_offset_sec }}" step="0.5" onchange="onOffsetSliderChange('{{ cam.id }}', this.value)">
+          </div>
+
+          <div class="dp-sync-remap">
+            <input type="text" class="dp-sync-input dp-mono" id="remap-{{ cam.id }}" value="{{ cam.video_path }}">
+            <button class="dp-btn-pill dp-btn-secondary dp-btn-sm" onclick="remapCamera('{{ cam.id }}')">Remap</button>
+          </div>
+        </div>
+        {% endfor %}
+      </div>
+
+      <div class="dp-modal-footer">
+        <button class="dp-btn-pill dp-btn-primary dp-btn-full" onclick="saveOffsets()">
+          SAVE ALL SYNCHRONIZATION OFFSETS
+        </button>
+      </div>
+    </div>
+  </div>
+
+
+  <!-- ========================================================================= -->
+  <!-- 6. MODAL 3: PERSON RE-ID & TRAJECTORY AUDIT REPORT                         -->
+  <!-- ========================================================================= -->
+  <div class="dp-modal-backdrop" id="report-modal" style="display: none;">
+    <div class="dp-modal-card" style="max-width: 840px; max-height: 90vh; display: flex; flex-direction: column;">
+      
+      <!-- Report Header -->
+      <div class="dp-modal-header" style="background: #111; border-bottom: 1px solid var(--dp-color-hairline-2); flex-shrink: 0;">
+        <div>
+          <div class="dp-modal-eyebrow" style="color: var(--dp-color-live); letter-spacing: 1px;">
+            OFFICIAL MULTI-CAMERA RE-ID DOSSIER // <span id="rep-case-id">CASE-2026-REID</span>
+          </div>
+          <h2 class="dp-modal-title" style="font-size: 18px; margin: 2px 0 4px 0;">Person Trajectory &amp; Final Location Sighting Report</h2>
+          <p class="dp-modal-desc" style="font-size: 11px; color: var(--dp-color-meta);">
+            Automated Cross-Camera Re-Identification Audit · Generated on <span id="rep-timestamp" class="dp-mono">--</span>
+          </p>
+        </div>
+        <button class="dp-modal-close" id="btn-close-report" onclick="closeReportModal()" title="Close Dossier">✕</button>
+      </div>
+
+      <!-- Report Body (Scrollable) -->
+      <div class="dp-modal-body" style="padding: 18px; overflow-y: auto; flex: 1; display: flex; flex-direction: column; gap: 16px;">
+        
+        <!-- Summary Cards Row -->
+        <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px;">
+          
+          <!-- Card 1: Suspect Profile -->
+          <div style="background: #0d0d0d; border: 1px solid var(--dp-color-hairline-2); border-radius: 6px; padding: 12px;">
+            <div style="font-size: 10px; font-weight: 700; color: var(--dp-color-meta); text-transform: uppercase; margin-bottom: 6px;">Target Appearance Profile</div>
+            <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 6px;">
+              <span id="rep-upper-dot" class="dp-color-swatch-dot" style="width: 12px; height: 12px; border-radius: 50%; display: inline-block;"></span>
+              <span style="font-size: 12px; color: var(--dp-color-bright); font-weight: 600;">Upper: <span id="rep-upper-color">--</span></span>
+            </div>
+            <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 8px;">
+              <span id="rep-lower-dot" class="dp-color-swatch-dot" style="width: 12px; height: 12px; border-radius: 50%; display: inline-block;"></span>
+              <span style="font-size: 12px; color: var(--dp-color-bright); font-weight: 600;">Lower: <span id="rep-lower-color">--</span></span>
+            </div>
+            <div style="font-size: 10px; color: var(--dp-color-live); font-family: var(--dp-font-mono);">
+              Match Confidence: <span id="rep-confidence">96%</span>
+            </div>
+          </div>
+
+          <!-- Card 2: Final Location Resolution -->
+          <div style="background: rgba(16, 185, 129, 0.08); border: 1px solid rgba(16, 185, 129, 0.35); border-radius: 6px; padding: 12px;">
+            <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 6px;">
+              <span style="font-size: 10px; font-weight: 700; color: #10b981; text-transform: uppercase;">Final Destination</span>
+              <span style="background: #10b981; color: #000; font-size: 8px; font-weight: 800; padding: 1px 6px; border-radius: 999px;">RESOLVED</span>
+            </div>
+            <div id="rep-final-loc" style="font-size: 13px; font-weight: 700; color: #f2f2f2; margin-bottom: 4px; line-height: 1.3;">--</div>
+            <div style="font-size: 10px; color: #a6a9ad;">
+              Last Sighting: <span id="rep-final-cam" class="dp-mono" style="color: #10b981; font-weight: 600;">--</span>
+            </div>
+          </div>
+
+          <!-- Card 3: Transit Metrics -->
+          <div style="background: #0d0d0d; border: 1px solid var(--dp-color-hairline-2); border-radius: 6px; padding: 12px;">
+            <div style="font-size: 10px; font-weight: 700; color: var(--dp-color-meta); text-transform: uppercase; margin-bottom: 6px;">Transit Metrics</div>
+            <div style="font-size: 20px; font-weight: 700; color: var(--dp-color-bright); font-family: var(--dp-font-mono); margin-bottom: 4px;" id="rep-transit-time">--</div>
+            <div style="font-size: 10px; color: var(--dp-color-meta);">
+              Total Sightings: <span id="rep-sighting-count" style="color: var(--dp-color-bright); font-weight: 600;">--</span>
+            </div>
+          </div>
+
+        </div>
+
+        <!-- Trajectory Path Visual Flow -->
+        <div style="background: #0d0d0d; border: 1px solid var(--dp-color-hairline); border-radius: 6px; padding: 12px;">
+          <div style="font-size: 10px; font-weight: 700; color: var(--dp-color-meta); text-transform: uppercase; margin-bottom: 8px;">Complete Verified Trajectory Path</div>
+          <div id="rep-path-flow" style="display: flex; flex-wrap: wrap; align-items: center; gap: 8px; font-family: var(--dp-font-mono); font-size: 11px;">
+            <!-- Rendered by JS -->
+          </div>
+        </div>
+
+        <!-- Chronological Sightings Table -->
+        <div style="background: #0d0d0d; border: 1px solid var(--dp-color-hairline); border-radius: 6px; overflow: hidden;">
+          <div style="padding: 10px 14px; background: #121212; border-bottom: 1px solid var(--dp-color-hairline); font-size: 11px; font-weight: 700; color: var(--dp-color-bright); letter-spacing: 0.5px;">
+            CHRONOLOGICAL CROSS-CAMERA SIGHTINGS LOG
+          </div>
+          <table style="width: 100%; border-collapse: collapse; font-size: 11px; text-align: left;">
+            <thead>
+              <tr style="border-bottom: 1px solid var(--dp-color-hairline); background: #080808; color: var(--dp-color-meta); font-family: var(--dp-font-mono); font-size: 10px;">
+                <th style="padding: 8px 10px;">#</th>
+                <th style="padding: 8px 10px;">CAMERA</th>
+                <th style="padding: 8px 10px;">FLOOR</th>
+                <th style="padding: 8px 10px;">TIMECODE</th>
+                <th style="padding: 8px 10px;">DURATION</th>
+                <th style="padding: 8px 10px;">OBSERVATION DETAILS</th>
+                <th style="padding: 8px 10px; text-align: right;">MATCH</th>
+              </tr>
+            </thead>
+            <tbody id="rep-table-body">
+              <!-- Rendered by JS -->
+            </tbody>
+          </table>
+        </div>
+
+      </div>
+
+      <!-- Report Footer -->
+      <div class="dp-modal-footer" style="background: #111; border-top: 1px solid var(--dp-color-hairline); padding: 12px 20px; display: flex; justify-content: space-between; align-items: center; flex-shrink: 0;">
+        <div style="font-size: 10px; color: var(--dp-color-meta);">
+          Audit Dossier Hash: <span id="rep-hash" class="dp-mono">SHA256:7B8F9A4E</span> · Immutable Surveillance Record
+        </div>
+        <div style="display: flex; gap: 10px;">
+          <button class="dp-btn-pill dp-btn-secondary" onclick="copyReportSummary()" title="Copy Text Summary">
+            📋 COPY SUMMARY
+          </button>
+          <button class="dp-btn-pill dp-btn-primary" onclick="window.print()" title="Print or Export PDF">
+            🖨 PRINT / PDF
+          </button>
+          <button class="dp-btn-pill dp-btn-secondary" onclick="closeReportModal()">
+            ✕ CLOSE
+          </button>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <script src="/static/js/app.js"></script>
+</body>
+</html>

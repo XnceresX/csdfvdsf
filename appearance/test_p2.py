@@ -178,8 +178,8 @@ def test_score_calibrator():
 
     # Auto-select (should pick platt for < 200 samples)
     calib_auto = ScoreCalibrator(method="auto")
-    small_scores = scores[:100]
-    small_labels = labels[:100]
+    small_scores = np.concatenate([scores[:50], scores[300:350]])
+    small_labels = np.concatenate([labels[:50], labels[300:350]])
     out = calib_auto.fit_transform(small_scores, small_labels)
     assert len(out) == 100
 

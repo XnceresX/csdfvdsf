@@ -9,6 +9,7 @@ and eliminate all false detections on car parts, doors, windows, pavements, and 
 from __future__ import annotations
 
 import time
+import os
 from typing import List, Tuple, Optional
 import cv2
 import numpy as np
@@ -117,6 +118,71 @@ class SharedPersonDetector:
         return detections
 
 
+
+
+class SharedYOLOv8Detector:
+    """
+    High-performance YOLOv8 person detector (60+ FPS on RTX 2050).
+    Filters COCO class 0 ('person') with ByteTrack compatible bounding boxes.
+    """
+    _instance: Optional[SharedYOLOv8Detector] = None
+
+    def __init__(self, confidence_threshold: float = 0.45):
+        self.confidence_threshold = confidence_threshold
+        self.model = None
+        self.is_loaded = False
+        print("[SharedYOLOv8Detector] Loading YOLOv8n Person Detector...")
+        try:
+            from ultralytics import YOLO
+            weights_candidates = [
+                os.path.join("data", "models", "yolov8n.pt"),
+                os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "data", "models", "yolov8n.pt"),
+                r"C:\project\safepass_appearance\yolov8n.pt",
+                "yolov8n.pt",
+            ]
+            w_path = next((w for w in weights_candidates if os.path.exists(w)), "yolov8n.pt")
+            self.model = YOLO(w_path)
+            self.is_loaded = True
+            print(f"[SharedYOLOv8Detector] YOLOv8n loaded successfully from {w_path}.")
+        except Exception as e:
+            print(f"[SharedYOLOv8Detector] Notice: Ultralytics not available or error ({e}).")
+            self.model = None
+            self.is_loaded = False
+
+    @classmethod
+    def get_instance(cls, confidence_threshold: float = 0.45) -> SharedYOLOv8Detector:
+        if cls._instance is None:
+            cls._instance = SharedYOLOv8Detector(confidence_threshold)
+        return cls._instance
+
+    def detect_frame(self, frame: np.ndarray, infer_size: Optional[Tuple[int, int]] = None) -> List[Detection]:
+        if not self.is_loaded or self.model is None:
+            return []
+        orig_h, orig_w = frame.shape[:2]
+        device = 0 if torch.cuda.is_available() else "cpu"
+        try:
+            results = self.model.predict(
+                frame,
+                classes=[0],  # Class 0 = Person in YOLO COCO
+                conf=self.confidence_threshold,
+                device=device,
+                verbose=False,
+            )
+            detections: List[Detection] = []
+            if results and results[0].boxes is not None:
+                boxes = results[0].boxes
+                for box in boxes:
+                    x1, y1, x2, y2 = [int(v) for v in box.xyxy[0].tolist()]
+                    score = float(box.conf[0].item())
+                    w = x2 - x1
+                    h = y2 - y1
+                    if h >= 25 and w >= 12:
+                        detections.append(Detection((x1, y1, x2, y2), score, "person"))
+            return detections
+        except Exception as e:
+            return []
+
+
 class PersonDetector:
     """
     Per-camera detector wrapper with staggered execution.
@@ -129,7 +195,12 @@ class PersonDetector:
         mode: str = "auto",
     ) -> None:
         self.detect_interval = detect_interval
-        self.detector = SharedPersonDetector.get_instance(confidence_threshold)
+        # Prefer ultra-fast YOLOv8n detector, with automatic fallback to FasterRCNN
+        yolo = SharedYOLOv8Detector.get_instance(confidence_threshold)
+        if yolo.is_loaded:
+            self.detector = yolo
+        else:
+            self.detector = SharedPersonDetector.get_instance(confidence_threshold)
         self.frame_idx = 0
         self.last_detections: List[Detection] = []
 

@@ -1,0 +1,275 @@
+# Mayfair Apartment 8-Camera Strategic Topology & Sync Configuration
+# Dataset: 8 cameras, ~15 mins each, Mayfair Apartment building
+# Corrected per Owner Ground Truth:
+# Ground floor: CAM 1, 2, 3, 4, 5 (CAM 3 & 4 = Entrance; CAM 1, 2, 5 = Sides)
+# First floor: CAM 6 (Staircase & Flat 1A/1B)
+# Second floor: CAM 7 (Staircase & Flat 2A/2B)
+# Terrace / Rooftop: CAM 8
+
+global_timeline:
+  duration_sec: 900.0  # 15 minutes max
+  fps: 15.0
+  lost_timeout_sec: 1.5
+  neighbor_search_timeout_sec: 30.0
+  low_rate_check_hz: 1.0
+  acquisition_threshold: 0.65
+  reacquisition_fusion_threshold: 0.55
+
+cameras:
+  cam1:
+    camera_id: cam1
+    name: "Ground Floor East Walkway"
+    floor: 0
+    floor_name: "Ground Floor"
+    video_path: "data/videos/CAM 1.mp4"
+    duration_sec: 839.56
+    time_offset_sec: 5.0  # DVR clock: 05:45:05 PM (+5s vs CAM 7)
+    map_coords:
+      x: 0.833  # 1000/1200
+      y: 0.412  # 330/800
+    fov_angle: 180
+    neighbors: ["cam2", "cam5"]
+    transit_bounds_sec:
+      cam2: [1.0, 15.0]
+      cam5: [2.0, 20.0]
+    exit_zones:
+      - name: "To SE Corner / Gate"
+        box: [0.15, 0.70, 0.65, 1.00]
+        is_terminal: false
+        handoff_cam: "cam2"
+      - name: "To North Walkway"
+        box: [0.25, 0.10, 0.60, 0.45]
+        is_terminal: false
+        handoff_cam: "cam5"
+
+  cam2:
+    camera_id: cam2
+    name: "Ground Floor SE Driveway / Side Walkway"
+    floor: 0
+    floor_name: "Ground Floor"
+    video_path: "data/videos/CAM 2.mp4"
+    duration_sec: 897.00
+    time_offset_sec: 2.0  # DVR clock: 05:45:02 PM (+2s vs CAM 7)
+    map_coords:
+      x: 0.800  # 960/1200
+      y: 0.837  # 670/800
+    fov_angle: 225
+    neighbors: ["cam1", "cam3"]
+    transit_bounds_sec:
+      cam1: [1.0, 15.0]
+      cam3: [1.5, 18.0]
+    exit_zones:
+      - name: "Main Gate Exit"
+        box: [0.05, 0.65, 0.55, 1.00]
+        is_terminal: true
+        terminal_name: "Main Gate Exit"
+      - name: "To East Walkway"
+        box: [0.60, 0.00, 1.00, 0.40]
+        is_terminal: false
+        handoff_cam: "cam1"
+      - name: "To Building Entrance"
+        box: [0.20, 0.00, 0.65, 0.40]
+        is_terminal: false
+        handoff_cam: "cam3"
+
+  cam3:
+    camera_id: cam3
+    name: "Ground Floor Building Entrance Right"
+    floor: 0
+    floor_name: "Ground Floor"
+    video_path: "data/videos/CAM 3.mp4"
+    duration_sec: 898.00
+    time_offset_sec: 1.0  # DVR clock: 05:45:01 PM (+1s vs CAM 7)
+    map_coords:
+      x: 0.617  # 740/1200
+      y: 0.400  # 320/800
+    fov_angle: 210
+    neighbors: ["cam2", "cam4", "cam6"]
+    transit_bounds_sec:
+      cam2: [1.5, 18.0]
+      cam4: [1.0, 12.0]
+      cam6: [2.0, 25.0]
+    exit_zones:
+      - name: "Main Gate Exit"
+        box: [0.18, 0.00, 0.85, 0.35]
+        is_terminal: true
+        terminal_name: "Main Gate Exit"
+      - name: "Ground Stairwell to 1F"
+        box: [0.00, 0.05, 0.25, 0.45]
+        is_terminal: false
+        handoff_cam: "cam6"
+      - name: "To Entrance Left"
+        box: [0.00, 0.30, 0.30, 0.85]
+        is_terminal: false
+        handoff_cam: "cam4"
+      - name: "To SE Driveway"
+        box: [0.55, 0.65, 1.00, 1.00]
+        is_terminal: false
+        handoff_cam: "cam2"
+
+  cam4:
+    camera_id: cam4
+    name: "Ground Floor Building Entrance Left"
+    floor: 0
+    floor_name: "Ground Floor"
+    video_path: "data/videos/CAM 4.mp4"
+    duration_sec: 898.00
+    time_offset_sec: 1.0  # DVR clock: 05:45:01 PM (+1s vs CAM 7)
+    map_coords:
+      x: 0.283  # 340/1200
+      y: 0.400  # 320/800
+    fov_angle: 330
+    neighbors: ["cam3", "cam5", "cam6"]
+    transit_bounds_sec:
+      cam3: [1.0, 12.0]
+      cam5: [2.0, 20.0]
+      cam6: [2.0, 25.0]
+    exit_zones:
+      - name: "Main Gate Exit"
+        box: [0.45, 0.00, 0.95, 0.35]
+        is_terminal: true
+        terminal_name: "Main Gate Exit"
+      - name: "Room / Store"
+        box: [0.00, 0.40, 0.25, 0.95]
+        is_terminal: true
+        terminal_name: "Room/Store"
+      - name: "Ground Stairwell to 1F"
+        box: [0.70, 0.05, 1.00, 0.40]
+        is_terminal: false
+        handoff_cam: "cam6"
+      - name: "To North Back Walkway"
+        box: [0.15, 0.00, 0.55, 0.30]
+        is_terminal: false
+        handoff_cam: "cam5"
+      - name: "To Entrance Right"
+        box: [0.70, 0.35, 1.00, 0.90]
+        is_terminal: false
+        handoff_cam: "cam3"
+
+  cam5:
+    camera_id: cam5
+    name: "Ground Floor North Back Walkway"
+    floor: 0
+    floor_name: "Ground Floor"
+    video_path: "data/videos/CAM 5.mp4"
+    duration_sec: 900.64
+    time_offset_sec: 12.0  # DVR clock: 05:45:12 PM (+12s vs CAM 7)
+    map_coords:
+      x: 0.517  # 620/1200
+      y: 0.200  # 160/800
+    fov_angle: 180
+    neighbors: ["cam1", "cam4"]
+    transit_bounds_sec:
+      cam1: [2.0, 20.0]
+      cam4: [2.0, 20.0]
+    exit_zones:
+      - name: "To East Walkway"
+        box: [0.30, 0.10, 0.60, 0.45]
+        is_terminal: false
+        handoff_cam: "cam1"
+      - name: "To Entrance Left"
+        box: [0.25, 0.65, 0.75, 1.00]
+        is_terminal: false
+        handoff_cam: "cam4"
+
+  cam6:
+    camera_id: cam6
+    name: "First Floor Stairwell Landing"
+    floor: 1
+    floor_name: "1st Floor Landing"
+    video_path: "data/videos/CAM 6.mp4"
+    duration_sec: 885.84
+    time_offset_sec: 27.0  # DVR clock: 05:45:27 PM (+27s vs CAM 7)
+    map_coords:
+      x: 0.500  # 600/1200
+      y: 0.550  # 440/800
+    fov_angle: 90
+    neighbors: ["cam3", "cam4", "cam7"]
+    transit_bounds_sec:
+      cam3: [2.0, 25.0]
+      cam4: [2.0, 25.0]
+      cam7: [2.0, 20.0]
+    exit_zones:
+      - name: "Flat 1A"
+        box: [0.35, 0.05, 0.55, 0.60]
+        is_terminal: true
+        terminal_name: "Flat 1A"
+      - name: "Flat 1B"
+        box: [0.65, 0.00, 0.85, 0.40]
+        is_terminal: true
+        terminal_name: "Flat 1B"
+      - name: "Stairs Down to Ground (Entrance Right)"
+        box: [0.45, 0.70, 0.68, 1.00]
+        is_terminal: false
+        handoff_cam: "cam3"
+      - name: "Stairs Down to Ground (Entrance Left)"
+        box: [0.28, 0.70, 0.48, 1.00]
+        is_terminal: false
+        handoff_cam: "cam4"
+      - name: "Stairs Up to 2F"
+        box: [0.00, 0.00, 0.35, 0.65]
+        is_terminal: false
+        handoff_cam: "cam7"
+
+  cam7:
+    camera_id: cam7
+    name: "Second Floor Stairwell Landing"
+    floor: 2
+    floor_name: "2nd Floor Landing"
+    video_path: "data/videos/CAM 7.mp4"
+    duration_sec: 900.00
+    time_offset_sec: 0.0  # DVR clock: 05:45:00 PM (Baseline 0.0s)
+    map_coords:
+      x: 0.500  # 600/1200
+      y: 0.550  # 440/800
+    fov_angle: 90
+    neighbors: ["cam6", "cam8"]
+    transit_bounds_sec:
+      cam6: [2.0, 20.0]
+      cam8: [2.0, 25.0]
+    exit_zones:
+      - name: "Flat 2A (Left)"
+        box: [0.30, 0.15, 0.50, 0.85]
+        is_terminal: true
+        terminal_name: "Flat 2A (Left)"
+      - name: "Flat 2B (Right)"
+        box: [0.58, 0.10, 0.80, 0.65]
+        is_terminal: true
+        terminal_name: "Flat 2B (Right)"
+      - name: "Stairs Down to 1F"
+        box: [0.30, 0.70, 0.65, 1.00]
+        is_terminal: false
+        handoff_cam: "cam6"
+      - name: "Stairs Up to Terrace"
+        box: [0.00, 0.00, 0.35, 0.65]
+        is_terminal: false
+        handoff_cam: "cam8"
+
+  cam8:
+    camera_id: cam8
+    name: "Top of Building / Terrace"
+    floor: 3
+    floor_name: "Terrace"
+    video_path: "data/videos/CAM 8.mp4"
+    duration_sec: 631.88
+    time_offset_sec: 3.0  # DVR clock: 05:45:03 PM (+3s vs CAM 7)
+    map_coords:
+      x: 0.533  # 640/1200
+      y: 0.512  # 410/800
+    fov_angle: 180
+    neighbors: ["cam7"]
+    transit_bounds_sec:
+      cam7: [2.0, 25.0]
+    exit_zones:
+      - name: "Terrace Door"
+        box: [0.42, 0.10, 0.65, 0.60]
+        is_terminal: true
+        terminal_name: "Terrace Door"
+      - name: "Terrace Area"
+        box: [0.35, 0.08, 0.50, 0.35]
+        is_terminal: true
+        terminal_name: "Terrace Area"
+      - name: "Stairs Down to 2F"
+        box: [0.50, 0.40, 0.85, 0.85]
+        is_terminal: false
+        handoff_cam: "cam7"

@@ -40,6 +40,9 @@ import numpy as np
 # ---------------------------------------------------------------------------
 
 OSNET_WEIGHT_CANDIDATES = [
+    os.path.join("data", "models", "osnet_x1_0_market1501.pth"),
+    os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "data", "models", "osnet_x1_0_market1501.pth"),
+    os.path.join(r"C:\project\safepass_appearance\models", "osnet_x1_0_market1501.pth"),
     os.path.join("data", "models", "osnet_x1_0_imagenet.pth"),
     os.path.join("data", "models", "osnet_ain_x1_0_imagenet.pth"),
     os.path.join("data", "models", "osnet_x1_0.pth"),
@@ -263,18 +266,27 @@ class AppearanceExtractor:
                 torch = self._torch
                 rgb = self._preprocess_crop(body_crop)
                 t = self._to_tensor(rgb)
+                use_fp16 = (self.device == "cuda" or (isinstance(self.device, torch.device) and self.device.type == "cuda"))
 
                 with torch.no_grad():
-                    feat = self._extractor.model(t)
+                    if use_fp16:
+                        with torch.amp.autocast('cuda'):
+                            feat = self._extractor.model(t)
+                    else:
+                        feat = self._extractor.model(t)
 
-                emb = feat.cpu().numpy().flatten().astype(np.float32)
+                emb = feat.detach().float().cpu().numpy().flatten().astype(np.float32)
 
                 if apply_tta:
                     rgb_flip = cv2.flip(rgb, 1)
                     t_flip = self._to_tensor(rgb_flip)
                     with torch.no_grad():
-                        feat_flip = self._extractor.model(t_flip)
-                    emb_flip = feat_flip.cpu().numpy().flatten().astype(np.float32)
+                        if use_fp16:
+                            with torch.amp.autocast('cuda'):
+                                feat_flip = self._extractor.model(t_flip)
+                        else:
+                            feat_flip = self._extractor.model(t_flip)
+                    emb_flip = feat_flip.detach().float().cpu().numpy().flatten().astype(np.float32)
                     emb = emb + emb_flip  # average via sum then L2-norm
 
                 # L2 normalise
@@ -306,12 +318,38 @@ class AppearanceExtractor:
         e2 = self.extract_embedding(crop2)
         return appearance_cosine_similarity(e1, e2)
 
-    def batch_extract(self, crops: list) -> np.ndarray:
+    def batch_extract(self, crops: list, batch_size: int = 16) -> np.ndarray:
         """
-        Extract embeddings for a list of body crop images.
+        Extract embeddings for a list of body crop images with true batched tensor inference.
 
         Returns
         -------
         np.ndarray, shape (N, 512), one row per crop.
         """
-        return np.stack([self.extract_embedding(c) for c in crops], axis=0)
+        if not crops:
+            return np.empty((0, EMBEDDING_DIM), dtype=np.float32)
+        if self._model is None:
+            return np.stack([self.extract_embedding(c) for c in crops], axis=0)
+
+        try:
+            torch = self._torch
+            use_fp16 = (self.device == "cuda" or (isinstance(self.device, torch.device) and self.device.type == "cuda"))
+            tensors = [self._transform(self._preprocess_crop(c)) for c in crops]
+            all_feats = []
+            for i in range(0, len(tensors), batch_size):
+                chunk = torch.stack(tensors[i:i + batch_size]).to(self.device)
+                with torch.no_grad():
+                    if use_fp16:
+                        with torch.amp.autocast('cuda'):
+                            feats = self._extractor.model(chunk)
+                    else:
+                        feats = self._extractor.model(chunk)
+                f_np = feats.detach().float().cpu().numpy()
+                all_feats.append(f_np)
+            res = np.concatenate(all_feats, axis=0).astype(np.float32)
+            # L2 normalise
+            norms = np.linalg.norm(res, axis=1, keepdims=True) + 1e-8
+            return (res / norms).astype(np.float32)
+        except Exception as e:
+            # Fallback to sequential
+            return np.stack([self.extract_embedding(c) for c in crops], axis=0)

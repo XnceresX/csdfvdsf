@@ -12,7 +12,7 @@ Combines:
 
 from __future__ import annotations
 
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 from typing import Dict, List, Optional, Tuple, Any
 import numpy as np
 
@@ -21,7 +21,7 @@ from reid.embedding import cosine_similarity
 
 @dataclass
 class GlobalIdentity:
-    """Represents a unique cross-camera individual."""
+    """Represents a unique cross-camera individual with multi-exemplar bank."""
     global_id: str
     embedding: np.ndarray
     camera_id: str
@@ -30,6 +30,8 @@ class GlobalIdentity:
     first_frame: int = 0
     total_detections: int = 1
     last_zone_confidence: float = 0.0
+    exemplars: List[np.ndarray] = field(default_factory=list)
+    last_enrolled_frame: int = 0
 
 
 class GlobalIDManager:
@@ -80,7 +82,14 @@ class GlobalIDManager:
             if candidate.camera_id == camera_id and (frame_index - candidate.last_frame < 30):
                 continue
 
-            similarity = cosine_similarity(embedding, candidate.embedding)
+            # Quality-aware matching: query against candidate's exemplar bank
+            if candidate.exemplars:
+                sims = [cosine_similarity(embedding, ex) for ex in candidate.exemplars]
+                # Average of top-3 matching exemplars (or max)
+                sims.sort(reverse=True)
+                similarity = float(np.mean(sims[:min(3, len(sims))]))
+            else:
+                similarity = cosine_similarity(embedding, candidate.embedding)
             frame_delta = max(0, frame_index - candidate.last_frame)
             recency = max(0.0, 1.0 - (frame_delta / max(1, self.max_frame_gap)))
 
@@ -123,6 +132,8 @@ class GlobalIDManager:
             first_frame=frame_index,
             total_detections=1,
             last_zone_confidence=zone_confidence,
+            exemplars=[embedding.copy()],
+            last_enrolled_frame=frame_index,
         )
         self.events.append({
             "event": "new_person_id",
@@ -143,11 +154,31 @@ class GlobalIDManager:
         zone_confidence: float,
     ) -> None:
         identity = self.identities[global_id]
-        # Exponential moving average update
-        identity.embedding = 0.85 * identity.embedding + 0.15 * embedding
-        norm = np.linalg.norm(identity.embedding)
-        if norm > 1e-8:
-            identity.embedding = identity.embedding / norm
+        
+        # Temporal spacing gate (minimum 15 frames / ~1 sec) to prevent redundant frame flooding
+        if frame_index - identity.last_enrolled_frame >= 15:
+            if not identity.exemplars:
+                identity.exemplars.append(identity.embedding.copy())
+            if len(identity.exemplars) < 10:
+                identity.exemplars.append(embedding.copy())
+            else:
+                # Replace the exemplar closest to the new one (maintain diversity)
+                sims = [cosine_similarity(embedding, ex) for ex in identity.exemplars]
+                idx_rep = int(np.argmax(sims))
+                identity.exemplars[idx_rep] = embedding.copy()
+            identity.last_enrolled_frame = frame_index
+            
+            # Recalculate centroid embedding from bank
+            mean_emb = np.mean(identity.exemplars, axis=0)
+            norm = np.linalg.norm(mean_emb)
+            if norm > 1e-8:
+                identity.embedding = mean_emb / norm
+        else:
+            # Light moving average for intervening frames
+            identity.embedding = 0.95 * identity.embedding + 0.05 * embedding
+            norm = np.linalg.norm(identity.embedding)
+            if norm > 1e-8:
+                identity.embedding = identity.embedding / norm
 
         identity.camera_id = camera_id
         identity.local_id = local_id
